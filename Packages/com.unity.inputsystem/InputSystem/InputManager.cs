@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using UnityEngine.InputSystem.OldInputCompatibility;
 using Unity.Collections;
 using UnityEngine.InputSystem.Composites;
 using UnityEngine.InputSystem.Controls;
@@ -1541,10 +1542,17 @@ namespace UnityEngine.InputSystem
             InstallGlobals();
 
             ApplySettings();
+
+            // TODO find a better place
+            //OldInputCompatibility.OldInputCompatibility.BootstrapInputConfiguration();
+            //OldInputCompatibility.OldInputCompatibility.Enable();
         }
 
         internal void Destroy()
         {
+            // TODO find a better place
+            //OldInputCompatibility.OldInputCompatibility.Disable();
+
             // There isn't really much of a point in removing devices but we still
             // want to clear out any global state they may be keeping. So just tell
             // the devices that they got removed without actually removing them.
@@ -2865,6 +2873,9 @@ namespace UnityEngine.InputSystem
 
             if (gameIsPlayingAndHasFocus)
                 ProcessStateChangeMonitorTimeouts();
+
+            // TODO find a better place for this one
+            //OldInputCompatibility.OldInputCompatibility.OnUpdate();
 
             ////TODO: fire event that allows code to update state *from* state we just updated
 
