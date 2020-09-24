@@ -14,7 +14,7 @@ public class KeyboardMouseOldInput : MonoBehaviour
     public Text m_keyboardInfoText;
     public Text m_mouseInfoText;
 
-#if ENABLE_LEGACY_INPUT_MANAGER
+#if true || ENABLE_LEGACY_INPUT_MANAGER // TODO restore
     void Update()
     {
         // Keyboard input or mouse button is pressed

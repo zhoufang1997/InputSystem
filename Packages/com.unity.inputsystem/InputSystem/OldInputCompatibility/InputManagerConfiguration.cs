@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.InputSystem.Editor;
 
 namespace UnityEngine.InputSystem.OldInputCompatibility
@@ -21,7 +20,8 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         {
 #pragma warning disable 0649
             // TODO: FormerlySerializedAsAttribute is not supported by JsonUtility.FromJson ( https://fogbugz.unity3d.com/f/cases/1119033/ )
-            private string m_Name;
+            // needs to be public otherwise JsonUtility can't serialize it
+            public string m_Name;
             public string name => m_Name;
             public string negativeButton;
             public string positiveButton;
@@ -53,7 +53,11 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 var element = axesProperty.GetArrayElementAtIndex(i);
                 var json = element.CopyToJson();
                 var axis = JsonUtility.FromJson<Axis>(json);
-                result[i] = axis;
+
+                if (axis.name != null)
+                    result[i] = axis;
+                else
+                    Debug.Log("During conversion found InputManager axis with null name, skipping.");
             }
 
             return result;

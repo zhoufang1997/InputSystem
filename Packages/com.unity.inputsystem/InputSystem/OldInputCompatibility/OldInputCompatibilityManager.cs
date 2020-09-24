@@ -9,7 +9,7 @@ using UnityEngine.InputSystem.Utilities;
 
 namespace UnityEngine.InputSystem.OldInputCompatibility
 {
-    public class OldInputCompatibility
+    public static class OldInputCompatibilityManager
     {
         /*
         // TODO remove
@@ -153,14 +153,38 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         */
 
         private static InputActionMap s_Actions;
+        private static IDictionary<string, ActionStateListener> s_ActionStateListeners; // TODO remove me
+        private static ActionStateListener[] s_KeyActions;
 
         public static void BootstrapInputConfiguration()
         {
-            return;
-            
             GamepadsAndJoysticksMonitor.Enable();
 
             s_Actions = new InputActionMap("InputManagerLegacy");
+            s_ActionStateListeners = new Dictionary<string, ActionStateListener>();
+            s_KeyActions = new ActionStateListener[(int)KeyCode.Joystick8Button19 + 1];
+
+            foreach (var keyCode in (KeyCode[])Enum.GetValues(typeof(KeyCode)))
+            {
+                var controlPath = ControlPathMapper.GetKeyboardControlPathForKeyCode(keyCode, null);
+                if (controlPath == null)
+                    continue;
+
+                var actionName = ControlPathMapper.GetKeyboardControlActionNameForKeyCode(keyCode);
+
+                var action = s_Actions.FindAction(actionName);
+                if (action == null)
+                {
+                    action = s_Actions.AddAction(actionName, InputActionType.Button);
+                    s_KeyActions[(int)keyCode] = s_ActionStateListeners[actionName] = new ActionStateListener(action);
+                }
+
+                action.AddBinding(controlPath);
+            }
+
+
+
+            /*
             foreach(var axis in InputManagerConfiguration.GetCurrent())
             {
                 // Add action, if we haven't already.
@@ -188,22 +212,9 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                         ////TODO
                         break;
                 }
-            }
+            }*/
 
-            // JoystickMonitor.Setup();
-            //
-            // // TODO we need a different way to get the configuration
-            // var axesSettings = Resources.FindObjectsOfTypeAll<UnityEngine.Object>()
-            //     .Where(o => o.GetType().FullName == "UnityEditor.InputManager")
-            //     .Select(o => new SerializedObject(o).FindProperty("m_Axes"))
-            //     .ToArray();
-            //
-            // foreach (SerializedProperty axesSetting in axesSettings)
-            // foreach (SerializedProperty axisSettings in axesSetting)
-            //     ConsumeInputManagerAxisSettings(axisSettings);
-            //
-
-            Input.provider = new ApiShimDataProvider();
+            Input.provider = new ApiShimDataProvider(s_Actions, s_ActionStateListeners, s_KeyActions);
         }
 
         private static void AddButtonBindings(InputAction action, InputManagerConfiguration.Axis axis)
@@ -240,7 +251,6 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 */
         }
 
-        /*
         private static InputActionSetupExtensions.CompositeSyntax WithInputManagerBinding(this InputActionSetupExtensions.CompositeSyntax composite, string partName, string binding, string processors)
         {
             var keyCode = KeyNames.NameToKey(binding);
@@ -302,23 +312,16 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             if (!string.IsNullOrEmpty(mouse))
                 action.AddBinding(mouse, processors: processors);
         }
-        */
 
 
         public static void Enable()
         {
-            //foreach (var pair in axes)
-            //    pair.Value.action.Enable();
+            s_Actions.Enable();
         }
 
         public static void Disable()
         {
-            //foreach (var pair in axes)
-            //    pair.Value.action.Disable();
-        }
-
-        public static void OnUpdate()
-        {
+            s_Actions.Disable();
         }
     }
 }

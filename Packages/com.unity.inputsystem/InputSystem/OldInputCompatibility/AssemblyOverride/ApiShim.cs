@@ -441,43 +441,21 @@ namespace UnityEngine
     {
         public abstract class DataProvider
         {
-            public abstract float GetAxis(string name);
-            public abstract bool GetButton(string name);
-            public abstract bool GetButtonDown(string name);
-            public abstract bool GetButtonUp(string name);
+            public abstract float GetAxis(string axisName);
+            public abstract bool GetButton(string axisName);
+            public abstract bool GetButtonDown(string axisName);
+            public abstract bool GetButtonUp(string axisName);
+
+
+            public abstract bool GetKey(KeyCode key);
+            public abstract bool GetKey(string keyCodeName);
+            public abstract bool GetKeyUp(KeyCode key);
+            public abstract bool GetKeyUp(string keyCodeName);
+            public abstract bool GetKeyDown(KeyCode key);
+            public abstract bool GetKeyDown(string keyCodeName);
         };
 
         public static DataProvider provider;
-
-        private static bool GetKeyInt(KeyCode key)
-        {
-            return false;
-        }
-
-        private static bool GetKeyString(string name)
-        {
-            return false;
-        }
-
-        private static bool GetKeyUpInt(KeyCode key)
-        {
-            return false;
-        }
-
-        private static bool GetKeyUpString(string name)
-        {
-            return false;
-        }
-
-        private static bool GetKeyDownInt(KeyCode key)
-        {
-            return false;
-        }
-
-        private static bool GetKeyDownString(string name)
-        {
-            return false;
-        }
 
         public static float GetAxis(string axisName)
         {
@@ -542,32 +520,32 @@ namespace UnityEngine
 
         public static bool GetKey(KeyCode key)
         {
-            return GetKeyInt(key);
+            return provider?.GetKey(key) ?? false;
         }
 
         public static bool GetKey(string name)
         {
-            return GetKeyString(name);
+            return provider?.GetKey(name) ?? false;
         }
 
         public static bool GetKeyUp(KeyCode key)
         {
-            return GetKeyUpInt(key);
+            return provider?.GetKeyUp(key) ?? false;
         }
 
         public static bool GetKeyUp(string name)
         {
-            return GetKeyUpString(name);
+            return provider?.GetKeyUp(name) ?? false;
         }
 
         public static bool GetKeyDown(KeyCode key)
         {
-            return GetKeyDownInt(key);
+            return provider?.GetKeyDown(key) ?? false;
         }
 
         public static bool GetKeyDown(string name)
         {
-            return GetKeyDownString(name);
+            return provider?.GetKeyDown(name) ?? false;
         }
 
         [Conditional("UNITY_EDITOR")]

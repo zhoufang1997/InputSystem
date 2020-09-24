@@ -1,4 +1,3 @@
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
 namespace UnityEngine.InputSystem.OldInputCompatibility
@@ -7,6 +6,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
     // TODO: remove this and move everything to InputAction
     internal class ActionStateListener
     {
+        public InputAction action;
         public bool isPressed { get; private set; }
 
         // TODO should this be moved to InputAction?
@@ -15,8 +15,9 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         public bool cancelled => (lastCanceledInUpdate != 0) &&
                                  (lastCanceledInUpdate == InputUpdate.s_UpdateStepCount);
 
-        public ActionStateListener(InputAction action)
+        public ActionStateListener(InputAction setAction)
         {
+            action = setAction;
             action.started += c =>
             {
                 isPressed = true;

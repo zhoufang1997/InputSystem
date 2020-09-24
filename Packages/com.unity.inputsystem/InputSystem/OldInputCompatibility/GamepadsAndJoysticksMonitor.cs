@@ -1,4 +1,3 @@
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
 namespace UnityEngine.InputSystem.OldInputCompatibility
@@ -17,15 +16,15 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         public static void Enable()
         {
             // Collect all joysticks and gamepads.
-            foreach (var device in UnityEngine.InputSystem.InputSystem.devices)
+            foreach (var device in InputSystem.devices)
                 if (device is Joystick || device is Gamepad)
                 {
                     var index = ArrayHelpers.AppendWithCapacity(ref m_Joysticks, ref m_JoystickCount, device);
-                    UnityEngine.InputSystem.InputSystem.AddDeviceUsage(device, JoyNumToUsage(index));
+                    InputSystem.AddDeviceUsage(device, JoyNumToUsage(index));
                 }
 
             // Monitor joysticks and gamepads.
-            UnityEngine.InputSystem.InputSystem.onDeviceChange +=
+            InputSystem.onDeviceChange +=
                 (device, change) =>
                 {
                     if (change == InputDeviceChange.Removed)
@@ -40,7 +39,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                     else if (change == InputDeviceChange.Added && (device is Joystick || device is Gamepad))
                     {
                         var index = ArrayHelpers.AppendWithCapacity(ref m_Joysticks, ref m_JoystickCount, device);
-                        UnityEngine.InputSystem.InputSystem.AddDeviceUsage(device, JoyNumToUsage(index));
+                        InputSystem.AddDeviceUsage(device, JoyNumToUsage(index));
                     }
                 };
         }
