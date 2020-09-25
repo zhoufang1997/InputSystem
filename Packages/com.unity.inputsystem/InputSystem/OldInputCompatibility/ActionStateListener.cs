@@ -15,15 +15,17 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         public bool cancelled => (lastCanceledInUpdate != 0) &&
                                  (lastCanceledInUpdate == InputUpdate.s_UpdateStepCount);
 
-        public ActionStateListener(InputAction setAction)
+        public ActionStateListener(InputAction setAction, KeyCode correlatedKeyCode)
         {
             action = setAction;
             action.started += c =>
             {
+                Debug.Log($"{correlatedKeyCode} pressed");
                 isPressed = true;
             };
             action.canceled += c =>
             {
+                Debug.Log($"{correlatedKeyCode} canceled");
                 isPressed = false;
                 lastCanceledInUpdate = InputUpdate.s_UpdateStepCount;
             };

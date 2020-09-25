@@ -176,7 +176,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 if (action == null)
                 {
                     action = s_Actions.AddAction(actionName, InputActionType.Button);
-                    s_KeyActions[(int)keyCode] = s_ActionStateListeners[actionName] = new ActionStateListener(action);
+                    s_KeyActions[(int)keyCode] = s_ActionStateListeners[actionName] = new ActionStateListener(action, keyCode);
                 }
 
                 action.AddBinding(controlPath);
