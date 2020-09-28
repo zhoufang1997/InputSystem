@@ -453,6 +453,16 @@ namespace UnityEngine
             public abstract bool GetKeyUp(string keyCodeName);
             public abstract bool GetKeyDown(KeyCode key);
             public abstract bool GetKeyDown(string keyCodeName);
+
+            public abstract bool IsAnyKeyPressed();
+            public abstract bool IsAnyKeyDown();
+
+            public abstract string GetInputString();
+            public abstract Vector3 GetMousePosition();
+            public abstract Vector2 GetMouseScrollDelta();
+            public abstract bool GetMouseButton(int button);
+            public abstract bool GetMouseButtonDown(int button);
+            public abstract bool GetMouseButtonUp(int button);
         };
 
         public static DataProvider provider;
@@ -464,7 +474,7 @@ namespace UnityEngine
 
         public static float GetAxisRaw(string axisName)
         {
-            return GetAxis(axisName);
+            return GetAxis(axisName); // TODO check if this is valid
         }
 
         public static bool GetButton(string buttonName)
@@ -484,17 +494,17 @@ namespace UnityEngine
 
         public static bool GetMouseButton(int button)
         {
-            return false;
+            return provider?.GetMouseButton(button) ?? false;
         }
 
         public static bool GetMouseButtonDown(int button)
         {
-            return false;
+            return provider?.GetMouseButtonDown(button) ?? false;
         }
 
         public static bool GetMouseButtonUp(int button)
         {
-            return false;
+            return provider?.GetMouseButtonUp(button) ?? false;
         }
 
         public static void ResetInputAxes()
@@ -560,11 +570,28 @@ namespace UnityEngine
         // private extern static void SimulateTouchInternal(int id, Vector2 position, TouchPhase action, long timestamp);
 
         public static bool simulateMouseWithTouches { get; set; }
-        public static bool anyKey { get; }
-        public static bool anyKeyDown { get; }
-        public static string inputString { get; }
-        public static Vector3 mousePosition { get; }
-        public static Vector2 mouseScrollDelta { get; }
+        public static bool anyKey
+        {
+            get { return provider?.IsAnyKeyPressed() ?? false; }
+        }
+        public static bool anyKeyDown
+        {
+            get { return provider?.IsAnyKeyDown() ?? false; }
+        }
+        public static string inputString
+        {
+            get { return provider?.GetInputString() ?? ""; }
+        }
+
+        public static Vector3 mousePosition
+        {
+            get { return provider?.GetMousePosition() ?? Vector3.zero; }
+        }
+
+        public static Vector2 mouseScrollDelta
+        {
+            get { return provider?.GetMouseScrollDelta() ?? Vector2.zero; }
+        }
         public static IMECompositionMode imeCompositionMode { get; set; }
         public static string compositionString { get; }
         public static bool imeIsSelected { get; }

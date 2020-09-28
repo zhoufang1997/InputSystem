@@ -6,14 +6,16 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 {
     internal class ApiShimDataProvider : Input.DataProvider
     {
-        public ApiShimDataProvider(InputActionMap setMap, IDictionary<string, ActionStateListener> setStateListeners, ActionStateListener[] setKeyActions)
+        public ApiShimDataProvider(InputActionMap setMap, ActionStateListener setAnyKeyStateListener, IDictionary<string, ActionStateListener> setStateListeners, ActionStateListener[] setKeyActions)
         {
             map = setMap;
+            anyKeyStateListener = setAnyKeyStateListener;
             stateListeners = setStateListeners;
             keyActions = setKeyActions;
         }
 
         private InputActionMap map;
+        private ActionStateListener anyKeyStateListener;
         private IDictionary<string, ActionStateListener> stateListeners; // TODO remove this later on
         private ActionStateListener[] keyActions; // array of keycodes
 
@@ -66,6 +68,46 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         public override bool GetKeyDown(string keyCodeName)
         {
             return GetKeyDown(KeyNames.NameToKey(keyCodeName));
+        }
+
+        public override bool IsAnyKeyPressed()
+        {
+            return anyKeyStateListener.isPressed;
+        }
+
+        public override bool IsAnyKeyDown()
+        {
+            return anyKeyStateListener.action.triggered;
+        }
+
+        public override string GetInputString()
+        {
+            return "";
+        }
+
+        public override Vector3 GetMousePosition()
+        {
+            return Vector3.zero;
+        }
+
+        public override Vector2 GetMouseScrollDelta()
+        {
+            return Vector2.zero;
+        }
+
+        public override bool GetMouseButton(int button)
+        {
+            return false;
+        }
+
+        public override bool GetMouseButtonDown(int button)
+        {
+            return false;
+        }
+
+        public override bool GetMouseButtonUp(int button)
+        {
+            return false;
         }
     };
 }

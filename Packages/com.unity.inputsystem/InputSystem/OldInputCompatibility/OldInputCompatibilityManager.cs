@@ -164,6 +164,12 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             s_ActionStateListeners = new Dictionary<string, ActionStateListener>();
             s_KeyActions = new ActionStateListener[(int)KeyCode.Joystick8Button19 + 1];
 
+            // emulate any keyboard key
+            var anyKeyAction = s_Actions.AddAction(ControlPathMapper.GetKeyboardControlActionNameForKeyCode("__AnyKey"), InputActionType.Button);
+            anyKeyAction.AddBinding("<Keyboard>/anyKey");
+            var anyKeyActionListener = new ActionStateListener(anyKeyAction);
+
+            // emulate all keyboard keys
             foreach (var keyCode in (KeyCode[])Enum.GetValues(typeof(KeyCode)))
             {
                 var controlPath = ControlPathMapper.GetKeyboardControlPathForKeyCode(keyCode, null);
@@ -176,7 +182,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 if (action == null)
                 {
                     action = s_Actions.AddAction(actionName, InputActionType.Button);
-                    s_KeyActions[(int)keyCode] = s_ActionStateListeners[actionName] = new ActionStateListener(action, keyCode);
+                    s_KeyActions[(int)keyCode] = s_ActionStateListeners[actionName] = new ActionStateListener(action);
                 }
 
                 action.AddBinding(controlPath);
@@ -214,7 +220,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 }
             }*/
 
-            Input.provider = new ApiShimDataProvider(s_Actions, s_ActionStateListeners, s_KeyActions);
+            Input.provider = new ApiShimDataProvider(s_Actions, anyKeyActionListener, s_ActionStateListeners, s_KeyActions);
         }
 
         private static void AddButtonBindings(InputAction action, InputManagerConfiguration.Axis axis)

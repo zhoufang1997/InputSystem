@@ -27,6 +27,16 @@ public class KeyboardMouseOldInput : MonoBehaviour
                 StopKeyHighlight(kcode.ToString());
         }
 
+        if (Input.anyKey)
+            StartKeyHighlight("Any Key Pressed");
+        else
+            StopKeyHighlight("Any Key Pressed");
+
+        if (Input.anyKeyDown)
+            StartKeyHighlight("Any Key Down");
+        else
+            StopKeyHighlight("Any Key Down");
+
         // Mouse move
         float moveX = Input.GetAxis("Mouse X");
         float moveY = Input.GetAxis("Mouse Y");
