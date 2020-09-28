@@ -18,27 +18,28 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         {
             switch (keyCode)
             {
+                case KeyCode.Escape: return $"<Keyboard>{usage}/escape";
+                case KeyCode.Space: return $"<Keyboard>{usage}/space";
+                case KeyCode.Return: return $"<Keyboard>{usage}/Enter";
+                case KeyCode.Tab: return $"<Keyboard>{usage}/tab";
+                case KeyCode.BackQuote: return $"<Keyboard>{usage}/backquote";
+                case KeyCode.Quote: return $"<Keyboard>{usage}/quote";
+                case KeyCode.Semicolon: return $"<Keyboard>{usage}/semicolon";
+                case KeyCode.Comma: return $"<Keyboard>{usage}/comma";
+                case KeyCode.Period: return $"<Keyboard>{usage}/period";
+                case KeyCode.Slash: return $"<Keyboard>{usage}/slash";
+                case KeyCode.Backslash: return $"<Keyboard>{usage}/backslash";
+                case KeyCode.LeftBracket: return $"<Keyboard>{usage}/leftBracket";
+                case KeyCode.RightBracket: return $"<Keyboard>{usage}/rightBracket";
+                case KeyCode.Minus: return $"<Keyboard>{usage}/minus";
+                case KeyCode.Equals: return $"<Keyboard>{usage}/equals";
+                case KeyCode.UpArrow: return $"<Keyboard>{usage}/upArrow";
+                case KeyCode.DownArrow: return $"<Keyboard>{usage}/downArrow";
+                case KeyCode.LeftArrow: return $"<Keyboard>{usage}/leftArrow";
+                case KeyCode.RightArrow: return $"<Keyboard>{usage}/rightArrow";
+                // TODO reevaluate this, how do we get cyrillic for example?
                 // Bind by display name rather than key code. Means we respect keyboard layouts
                 // like the old input system does.
-                case KeyCode.Escape: return $"<Keyboard>{usage}/escape";
-                case KeyCode.Space: return $"<Keyboard>{usage}/#(Space)";
-                case KeyCode.Return: return $"<Keyboard>{usage}/#(Enter)";
-                case KeyCode.Tab: return $"<Keyboard>{usage}/#(Tab)";
-                case KeyCode.BackQuote: return $"<Keyboard>{usage}/#(`)";
-                case KeyCode.Quote: return $"<Keyboard>{usage}/#(')";
-                case KeyCode.Semicolon: return $"<Keyboard>{usage}/#(;)";
-                case KeyCode.Comma: return $"<Keyboard>{usage}/#(,)";
-                case KeyCode.Period: return $"<Keyboard>{usage}/#(.)";
-                case KeyCode.Slash: return $"<Keyboard>{usage}/#(/)";
-                case KeyCode.Backslash: return $"<Keyboard>{usage}/#(\\\\)";
-                case KeyCode.LeftBracket: return $"<Keyboard>{usage}/#([)";
-                case KeyCode.RightBracket: return $"<Keyboard>{usage}/#(])";
-                case KeyCode.Minus: return $"<Keyboard>{usage}/#(-)";
-                case KeyCode.Equals: return $"<Keyboard>{usage}/#(=)";
-                case KeyCode.UpArrow: return $"<Keyboard>{usage}/#(Up Arrow)";
-                case KeyCode.DownArrow: return $"<Keyboard>{usage}/#(Down Arrow)";
-                case KeyCode.LeftArrow: return $"<Keyboard>{usage}/#(Left Arrow)";
-                case KeyCode.RightArrow: return $"<Keyboard>{usage}/#(Right Arrow)";
                 case KeyCode.A: return $"<Keyboard>{usage}/#(A)";
                 case KeyCode.B: return $"<Keyboard>{usage}/#(B)";
                 case KeyCode.C: return $"<Keyboard>{usage}/#(C)";
@@ -65,228 +66,75 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 case KeyCode.X: return $"<Keyboard>{usage}/#(X)";
                 case KeyCode.Y: return $"<Keyboard>{usage}/#(Y)";
                 case KeyCode.Z: return $"<Keyboard>{usage}/#(Z)";
-                case KeyCode.Alpha1: return $"<Keyboard>{usage}/#(1)";
-                case KeyCode.Alpha2: return $"<Keyboard>{usage}/#(2)";
-                case KeyCode.Alpha3: return $"<Keyboard>{usage}/#(3)";
-                case KeyCode.Alpha4: return $"<Keyboard>{usage}/#(4)";
-                case KeyCode.Alpha5: return $"<Keyboard>{usage}/#(5)";
-                case KeyCode.Alpha6: return $"<Keyboard>{usage}/#(6)";
-                case KeyCode.Alpha7: return $"<Keyboard>{usage}/#(7)";
-                case KeyCode.Alpha8: return $"<Keyboard>{usage}/#(8)";
-                case KeyCode.Alpha9: return $"<Keyboard>{usage}/#(9)";
-                case KeyCode.Alpha0: return $"<Keyboard>{usage}/#(0)";
-                case KeyCode.LeftShift: return $"<Keyboard>{usage}/#(Left Shift)";
-                case KeyCode.RightShift: return $"<Keyboard>{usage}/#(Right Shift)";
-                //case KeyCode.LeftShift: return $"<Keyboard>{usage}/#(Shift)";
-                case KeyCode.LeftAlt: return $"<Keyboard>{usage}/#(Left Alt)";
-                case KeyCode.RightAlt: return $"<Keyboard>{usage}/#(Right Alt)";
-                //case KeyCode.LeftAlt: return $"<Keyboard>{usage}/#(Alt)";
-                 case KeyCode.LeftControl: return $"<Keyboard>{usage}/#(Left Control)";
-                case KeyCode.RightControl: return $"<Keyboard>{usage}/#(Right Control)";
-                // case KeyCode.LeftCtrl: return $"<Keyboard>{usage}/#(Control)";
-                case KeyCode.LeftWindows: return $"<Keyboard>{usage}/#(Left System)";
-                case KeyCode.LeftApple: return $"<Keyboard>{usage}/#(Left System)";
-                case KeyCode.RightWindows: return $"<Keyboard>{usage}/#(Right System)";
-                case KeyCode.RightApple: return $"<Keyboard>{usage}/#(Right System)";
-                // case KeyCode.ContextMenu: return $"<Keyboard>{usage}/#(Context Menu)";
-                case KeyCode.Backspace: return $"<Keyboard>{usage}/#(Backspace)";
-                case KeyCode.PageDown: return $"<Keyboard>{usage}/#(Page Down)";
-                case KeyCode.PageUp: return $"<Keyboard>{usage}/#(Page Up)";
-                case KeyCode.Home: return $"<Keyboard>{usage}/#(Home)";
-                case KeyCode.End: return $"<Keyboard>{usage}/#(End)";
-                case KeyCode.Insert: return $"<Keyboard>{usage}/#(Insert)";
-                case KeyCode.Delete: return $"<Keyboard>{usage}/#(Delete)";
-                case KeyCode.CapsLock: return $"<Keyboard>{usage}/#(Caps Lock)";
-                case KeyCode.Numlock: return $"<Keyboard>{usage}/#(Num Lock)";
-                case KeyCode.Print: return $"<Keyboard>{usage}/#(Print Screen)";
-                case KeyCode.ScrollLock: return $"<Keyboard>{usage}/#(Scroll Lock)";
-                case KeyCode.Pause: return $"<Keyboard>{usage}/#(Pause/Break)";
-                case KeyCode.KeypadEnter: return $"<Keyboard>{usage}/#(Numpad Enter)";
-                case KeyCode.KeypadDivide: return $"<Keyboard>{usage}/#(Numpad /)";
-                case KeyCode.KeypadMultiply: return $"<Keyboard>{usage}/#(Numpad *)";
-                case KeyCode.KeypadPlus: return $"<Keyboard>{usage}/#(Numpad +)";
-                case KeyCode.KeypadMinus: return $"<Keyboard>{usage}/#(Numpad -)";
-                case KeyCode.KeypadPeriod: return $"<Keyboard>{usage}/#(Numpad .)";
-                case KeyCode.KeypadEquals: return $"<Keyboard>{usage}/#(Numpad =)";
-                case KeyCode.Keypad1: return $"<Keyboard>{usage}/#(Numpad 1)";
-                case KeyCode.Keypad2: return $"<Keyboard>{usage}/#(Numpad 2)";
-                case KeyCode.Keypad3: return $"<Keyboard>{usage}/#(Numpad 3)";
-                case KeyCode.Keypad4: return $"<Keyboard>{usage}/#(Numpad 4)";
-                case KeyCode.Keypad5: return $"<Keyboard>{usage}/#(Numpad 5)";
-                case KeyCode.Keypad6: return $"<Keyboard>{usage}/#(Numpad 6)";
-                case KeyCode.Keypad7: return $"<Keyboard>{usage}/#(Numpad 7)";
-                case KeyCode.Keypad8: return $"<Keyboard>{usage}/#(Numpad 8)";
-                case KeyCode.Keypad9: return $"<Keyboard>{usage}/#(Numpad 9)";
-                case KeyCode.Keypad0: return $"<Keyboard>{usage}/#(Numpad 0)";
-                case KeyCode.F1: return $"<Keyboard>{usage}/#(F1)";
-                case KeyCode.F2: return $"<Keyboard>{usage}/#(F2)";
-                case KeyCode.F3: return $"<Keyboard>{usage}/#(F3)";
-                case KeyCode.F4: return $"<Keyboard>{usage}/#(F4)";
-                case KeyCode.F5: return $"<Keyboard>{usage}/#(F5)";
-                case KeyCode.F6: return $"<Keyboard>{usage}/#(F6)";
-                case KeyCode.F7: return $"<Keyboard>{usage}/#(F7)";
-                case KeyCode.F8: return $"<Keyboard>{usage}/#(F8)";
-                case KeyCode.F9: return $"<Keyboard>{usage}/#(F9)";
-                case KeyCode.F10: return $"<Keyboard>{usage}/#(F10)";
-                case KeyCode.F11: return $"<Keyboard>{usage}/#(F11)";
-                case KeyCode.F12: return $"<Keyboard>{usage}/#(F12)";
+                case KeyCode.Alpha1: return $"<Keyboard>{usage}/1";
+                case KeyCode.Alpha2: return $"<Keyboard>{usage}/2";
+                case KeyCode.Alpha3: return $"<Keyboard>{usage}/3";
+                case KeyCode.Alpha4: return $"<Keyboard>{usage}/4";
+                case KeyCode.Alpha5: return $"<Keyboard>{usage}/5";
+                case KeyCode.Alpha6: return $"<Keyboard>{usage}/6";
+                case KeyCode.Alpha7: return $"<Keyboard>{usage}/7";
+                case KeyCode.Alpha8: return $"<Keyboard>{usage}/8";
+                case KeyCode.Alpha9: return $"<Keyboard>{usage}/9";
+                case KeyCode.Alpha0: return $"<Keyboard>{usage}/0";
+                case KeyCode.LeftShift: return $"<Keyboard>{usage}/leftShift";
+                case KeyCode.RightShift: return $"<Keyboard>{usage}/rightShift";
+                case KeyCode.LeftAlt: return $"<Keyboard>{usage}/leftAlt";
+                case KeyCode.RightAlt: return $"<Keyboard>{usage}/rightAlt";
+                case KeyCode.LeftControl: return $"<Keyboard>{usage}/leftCtrl";
+                case KeyCode.RightControl: return $"<Keyboard>{usage}/rightCtrl";
+                case KeyCode.LeftWindows: return $"<Keyboard>{usage}/leftMeta";
+                case KeyCode.LeftApple: return $"<Keyboard>{usage}/leftMeta";
+                case KeyCode.RightWindows: return $"<Keyboard>{usage}/rightMeta";
+                case KeyCode.RightApple: return $"<Keyboard>{usage}/rightMeta";
+                case KeyCode.Menu: return $"<Keyboard>{usage}/contextMenu";
+                case KeyCode.Backspace: return $"<Keyboard>{usage}/backspace";
+                case KeyCode.PageDown: return $"<Keyboard>{usage}/pageDown";
+                case KeyCode.PageUp: return $"<Keyboard>{usage}/pageUp";
+                case KeyCode.Home: return $"<Keyboard>{usage}/home";
+                case KeyCode.End: return $"<Keyboard>{usage}/end";
+                case KeyCode.Insert: return $"<Keyboard>{usage}/insert";
+                case KeyCode.Delete: return $"<Keyboard>{usage}/delete";
+                case KeyCode.CapsLock: return $"<Keyboard>{usage}/capsLock";
+                case KeyCode.Numlock: return $"<Keyboard>{usage}/numLock";
+                case KeyCode.Print: return $"<Keyboard>{usage}/printScreen";
+                case KeyCode.ScrollLock: return $"<Keyboard>{usage}/scrollLock";
+                case KeyCode.Pause: return $"<Keyboard>{usage}/pause"; // TODO is this correct?
+                case KeyCode.SysReq: return $"<Keyboard>{usage}/pause"; // TODO is this correct?
+                case KeyCode.KeypadEnter: return $"<Keyboard>{usage}/numpadEnter";
+                case KeyCode.KeypadDivide: return $"<Keyboard>{usage}/numpadDivide";
+                case KeyCode.KeypadMultiply: return $"<Keyboard>{usage}/numpadMultiply";
+                case KeyCode.KeypadPlus: return $"<Keyboard>{usage}/numpadPlus";
+                case KeyCode.KeypadMinus: return $"<Keyboard>{usage}/numpadMinus";
+                case KeyCode.KeypadPeriod: return $"<Keyboard>{usage}/numpadPeriod";
+                case KeyCode.KeypadEquals: return $"<Keyboard>{usage}/numpadEquals";
+                case KeyCode.Keypad1: return $"<Keyboard>{usage}/numpad1";
+                case KeyCode.Keypad2: return $"<Keyboard>{usage}/numpad2";
+                case KeyCode.Keypad3: return $"<Keyboard>{usage}/numpad3";
+                case KeyCode.Keypad4: return $"<Keyboard>{usage}/numpad4";
+                case KeyCode.Keypad5: return $"<Keyboard>{usage}/numpad5";
+                case KeyCode.Keypad6: return $"<Keyboard>{usage}/numpad6";
+                case KeyCode.Keypad7: return $"<Keyboard>{usage}/numpad7";
+                case KeyCode.Keypad8: return $"<Keyboard>{usage}/numpad8";
+                case KeyCode.Keypad9: return $"<Keyboard>{usage}/numpad9";
+                case KeyCode.Keypad0: return $"<Keyboard>{usage}/numpad0";
+                case KeyCode.F1: return $"<Keyboard>{usage}/f1";
+                case KeyCode.F2: return $"<Keyboard>{usage}/f2";
+                case KeyCode.F3: return $"<Keyboard>{usage}/f3";
+                case KeyCode.F4: return $"<Keyboard>{usage}/f4";
+                case KeyCode.F5: return $"<Keyboard>{usage}/f5";
+                case KeyCode.F6: return $"<Keyboard>{usage}/f6";
+                case KeyCode.F7: return $"<Keyboard>{usage}/f7";
+                case KeyCode.F8: return $"<Keyboard>{usage}/f8";
+                case KeyCode.F9: return $"<Keyboard>{usage}/f9";
+                case KeyCode.F10: return $"<Keyboard>{usage}/f10";
+                case KeyCode.F11: return $"<Keyboard>{usage}/f11";
+                case KeyCode.F12: return $"<Keyboard>{usage}/f12";
                 // case KeyCode.OEM1: return $"<Keyboard>{usage}/#(OEM1)";
                 // case KeyCode.OEM2: return $"<Keyboard>{usage}/#(OEM2)";
                 // case KeyCode.OEM3: return $"<Keyboard>{usage}/#(OEM3)";
                 // case KeyCode.OEM4: return $"<Keyboard>{usage}/#(OEM4)";
                 // case KeyCode.OEM5: return $"<Keyboard>{usage}/#(OEM5)";
                 // case KeyCode.IMESelected: return $"<Keyboard>{usage}/#(IMESelected)";
-
-                //etc.
-
-/*
-
-    Backspace = 8,
-    Tab = 9,
-    Clear = 12, // 0x0000000C
-    Return = 13, // 0x0000000D
-    Pause = 19, // 0x00000013
-    Escape = 27, // 0x0000001B
-    Space = 32, // 0x00000020
-    Exclaim = 33, // 0x00000021
-    DoubleQuote = 34, // 0x00000022
-    Hash = 35, // 0x00000023
-    Dollar = 36, // 0x00000024
-    Percent = 37, // 0x00000025
-    Ampersand = 38, // 0x00000026
-    Quote = 39, // 0x00000027
-    LeftParen = 40, // 0x00000028
-    RightParen = 41, // 0x00000029
-    Asterisk = 42, // 0x0000002A
-    Plus = 43, // 0x0000002B
-    Comma = 44, // 0x0000002C
-    Minus = 45, // 0x0000002D
-    Period = 46, // 0x0000002E
-    Slash = 47, // 0x0000002F
-    Alpha0 = 48, // 0x00000030
-    Alpha1 = 49, // 0x00000031
-    Alpha2 = 50, // 0x00000032
-    Alpha3 = 51, // 0x00000033
-    Alpha4 = 52, // 0x00000034
-    Alpha5 = 53, // 0x00000035
-    Alpha6 = 54, // 0x00000036
-    Alpha7 = 55, // 0x00000037
-    Alpha8 = 56, // 0x00000038
-    Alpha9 = 57, // 0x00000039
-    Colon = 58, // 0x0000003A
-    Semicolon = 59, // 0x0000003B
-    Less = 60, // 0x0000003C
-    Equals = 61, // 0x0000003D
-    Greater = 62, // 0x0000003E
-    Question = 63, // 0x0000003F
-    At = 64, // 0x00000040
-    LeftBracket = 91, // 0x0000005B
-    Backslash = 92, // 0x0000005C
-    RightBracket = 93, // 0x0000005D
-    Caret = 94, // 0x0000005E
-    Underscore = 95, // 0x0000005F
-    BackQuote = 96, // 0x00000060
-    A = 97, // 0x00000061
-    B = 98, // 0x00000062
-    C = 99, // 0x00000063
-    D = 100, // 0x00000064
-    E = 101, // 0x00000065
-    F = 102, // 0x00000066
-    G = 103, // 0x00000067
-    H = 104, // 0x00000068
-    I = 105, // 0x00000069
-    J = 106, // 0x0000006A
-    K = 107, // 0x0000006B
-    L = 108, // 0x0000006C
-    M = 109, // 0x0000006D
-    N = 110, // 0x0000006E
-    O = 111, // 0x0000006F
-    P = 112, // 0x00000070
-    Q = 113, // 0x00000071
-    R = 114, // 0x00000072
-    S = 115, // 0x00000073
-    T = 116, // 0x00000074
-    U = 117, // 0x00000075
-    V = 118, // 0x00000076
-    W = 119, // 0x00000077
-    X = 120, // 0x00000078
-    Y = 121, // 0x00000079
-    Z = 122, // 0x0000007A
-    LeftCurlyBracket = 123, // 0x0000007B
-    Pipe = 124, // 0x0000007C
-    RightCurlyBracket = 125, // 0x0000007D
-    Tilde = 126, // 0x0000007E
-    Delete = 127, // 0x0000007F
-    Keypad0 = 256, // 0x00000100
-    Keypad1 = 257, // 0x00000101
-    Keypad2 = 258, // 0x00000102
-    Keypad3 = 259, // 0x00000103
-    Keypad4 = 260, // 0x00000104
-    Keypad5 = 261, // 0x00000105
-    Keypad6 = 262, // 0x00000106
-    Keypad7 = 263, // 0x00000107
-    Keypad8 = 264, // 0x00000108
-    Keypad9 = 265, // 0x00000109
-    KeypadPeriod = 266, // 0x0000010A
-    KeypadDivide = 267, // 0x0000010B
-    KeypadMultiply = 268, // 0x0000010C
-    KeypadMinus = 269, // 0x0000010D
-    KeypadPlus = 270, // 0x0000010E
-    KeypadEnter = 271, // 0x0000010F
-    KeypadEquals = 272, // 0x00000110
-    UpArrow = 273, // 0x00000111
-    DownArrow = 274, // 0x00000112
-    RightArrow = 275, // 0x00000113
-    LeftArrow = 276, // 0x00000114
-    Insert = 277, // 0x00000115
-    Home = 278, // 0x00000116
-    End = 279, // 0x00000117
-    PageUp = 280, // 0x00000118
-    PageDown = 281, // 0x00000119
-    F1 = 282, // 0x0000011A
-    F2 = 283, // 0x0000011B
-    F3 = 284, // 0x0000011C
-    F4 = 285, // 0x0000011D
-    F5 = 286, // 0x0000011E
-    F6 = 287, // 0x0000011F
-    F7 = 288, // 0x00000120
-    F8 = 289, // 0x00000121
-    F9 = 290, // 0x00000122
-    F10 = 291, // 0x00000123
-    F11 = 292, // 0x00000124
-    F12 = 293, // 0x00000125
-    F13 = 294, // 0x00000126
-    F14 = 295, // 0x00000127
-    F15 = 296, // 0x00000128
-    Numlock = 300, // 0x0000012C
-    CapsLock = 301, // 0x0000012D
-    ScrollLock = 302, // 0x0000012E
-    RightShift = 303, // 0x0000012F
-    LeftShift = 304, // 0x00000130
-    RightControl = 305, // 0x00000131
-    LeftControl = 306, // 0x00000132
-    RightAlt = 307, // 0x00000133
-    LeftAlt = 308, // 0x00000134
-    RightApple = 309, // 0x00000135
-    RightCommand = 309, // 0x00000135
-    LeftApple = 310, // 0x00000136
-    LeftCommand = 310, // 0x00000136
-    LeftWindows = 311, // 0x00000137
-    RightWindows = 312, // 0x00000138
-    AltGr = 313, // 0x00000139
-    Help = 315, // 0x0000013B
-    Print = 316, // 0x0000013C
-    SysReq = 317, // 0x0000013D
-    Break = 318, // 0x0000013E
-    Menu = 319, // 0x0000013F
-    Mouse0 = 323, // 0x00000143
-    Mouse1 = 324, // 0x00000144
-    Mouse2 = 325, // 0x00000145
-    Mouse3 = 326, // 0x00000146
-    Mouse4 = 327, // 0x00000147
-    Mouse5 = 328, // 0x00000148
-    Mouse6 = 329, // 0x00000149
-                    */
             }
 
             return null;
