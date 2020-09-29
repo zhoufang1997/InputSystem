@@ -6,7 +6,12 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 {
     internal class ApiShimDataProvider : Input.DataProvider
     {
-        public ApiShimDataProvider(InputActionMap setMap, ActionStateListener setAnyKeyStateListener, IDictionary<string, ActionStateListener> setStateListeners, ActionStateListener[] setKeyActions)
+        public ApiShimDataProvider(
+            InputActionMap setMap,
+            ActionStateListener setAnyKeyStateListener,
+            IDictionary<string, ActionStateListener> setStateListeners,
+            ActionStateListener[] setKeyActions
+            )
         {
             map = setMap;
             anyKeyStateListener = setAnyKeyStateListener;
@@ -82,31 +87,46 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 
         public override string GetInputString()
         {
-            return "";
+            return ""; // TODO
+        }
+
+        public override bool IsMousePresent()
+        {
+            return Mouse.current != null;
         }
 
         public override Vector3 GetMousePosition()
         {
-            return Vector3.zero;
+            // seems like Z is always 0.0f
+            return Mouse.current != null ? new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), 0.0f) : Vector3.zero;
         }
 
         public override Vector2 GetMouseScrollDelta()
         {
-            return Vector2.zero;
+            return Mouse.current != null ? new Vector2(Mouse.current.scroll.x.ReadValue(), Mouse.current.scroll.y.ReadValue()) : Vector2.zero;
         }
 
-        public override bool GetMouseButton(int button)
+        public override bool GetMouseButton(int buttonNumber)
         {
+            var keyCode = ControlPathMapper.GetMouseKeyCodeForButtonNumber(buttonNumber);
+            if (keyCode.HasValue)
+                return keyActions[(int) keyCode]?.isPressed ?? false;
             return false;
         }
 
-        public override bool GetMouseButtonDown(int button)
+        public override bool GetMouseButtonDown(int buttonNumber)
         {
+            var keyCode = ControlPathMapper.GetMouseKeyCodeForButtonNumber(buttonNumber);
+            if (keyCode.HasValue)
+                return keyActions[(int) keyCode]?.action.triggered ?? false;
             return false;
         }
 
-        public override bool GetMouseButtonUp(int button)
+        public override bool GetMouseButtonUp(int buttonNumber)
         {
+            var keyCode = ControlPathMapper.GetMouseKeyCodeForButtonNumber(buttonNumber);
+            if (keyCode.HasValue)
+                return keyActions[(int) keyCode]?.cancelled ?? false;
             return false;
         }
     };

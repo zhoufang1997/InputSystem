@@ -162,33 +162,40 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 
             s_Actions = new InputActionMap("InputManagerLegacy");
             s_ActionStateListeners = new Dictionary<string, ActionStateListener>();
-            s_KeyActions = new ActionStateListener[(int)KeyCode.Joystick8Button19 + 1];
+            s_KeyActions = new ActionStateListener[(int) KeyCode.Joystick8Button19 + 1];
 
             // emulate any keyboard key
-            var anyKeyAction = s_Actions.AddAction(ControlPathMapper.GetKeyboardControlActionNameForKeyCode("__AnyKey"), InputActionType.Button);
+            var anyKeyAction = s_Actions.AddAction(ControlPathMapper.GetKeyboardControlActionNameForKeyCode("__AnyKey"),
+                InputActionType.Button);
             anyKeyAction.AddBinding("<Keyboard>/anyKey");
             var anyKeyActionListener = new ActionStateListener(anyKeyAction);
 
-            // emulate all keyboard keys
-            foreach (var keyCode in (KeyCode[])Enum.GetValues(typeof(KeyCode)))
+            // emulate all keys
+            foreach (var keyCode in (KeyCode[]) Enum.GetValues(typeof(KeyCode)))
             {
-                var controlPath = ControlPathMapper.GetKeyboardControlPathForKeyCode(keyCode, null);
-                if (controlPath == null)
+                var actionName = ControlPathMapper.GetKeyboardControlActionNameForKeyCode(keyCode);
+                var action = s_Actions.FindAction(actionName);
+
+                var keyboardControlPath = ControlPathMapper.GetKeyboardControlPathForKeyCode(keyCode, null);
+                var mouseControlPath = ControlPathMapper.GetMouseControlPathForKeyCode(keyCode, null);
+                if ((keyboardControlPath == null) && (mouseControlPath == null))
                     continue;
 
-                var actionName = ControlPathMapper.GetKeyboardControlActionNameForKeyCode(keyCode);
-
-                var action = s_Actions.FindAction(actionName);
                 if (action == null)
                 {
                     action = s_Actions.AddAction(actionName, InputActionType.Button);
-                    s_KeyActions[(int)keyCode] = s_ActionStateListeners[actionName] = new ActionStateListener(action);
+                    s_KeyActions[(int) keyCode] =
+                        s_ActionStateListeners[actionName] = new ActionStateListener(action);
                 }
 
-                action.AddBinding(controlPath);
+                if (keyboardControlPath != null)
+                    action.AddBinding(keyboardControlPath);
+                if (mouseControlPath != null)
+                    action.AddBinding(mouseControlPath);
             }
 
-
+            // mouse position is emulated via accessing Mouse.current directly
+            // TODO reevaluate if mouse position should also use actions
 
             /*
             foreach(var axis in InputManagerConfiguration.GetCurrent())
@@ -220,7 +227,12 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 }
             }*/
 
-            Input.provider = new ApiShimDataProvider(s_Actions, anyKeyActionListener, s_ActionStateListeners, s_KeyActions);
+            Input.provider = new ApiShimDataProvider(
+                s_Actions,
+                anyKeyActionListener,
+                s_ActionStateListeners,
+                s_KeyActions
+            );
         }
 
         private static void AddButtonBindings(InputAction action, InputManagerConfiguration.Axis axis)
@@ -257,7 +269,9 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 */
         }
 
-        private static InputActionSetupExtensions.CompositeSyntax WithInputManagerBinding(this InputActionSetupExtensions.CompositeSyntax composite, string partName, string binding, string processors)
+        private static InputActionSetupExtensions.CompositeSyntax WithInputManagerBinding(
+            this InputActionSetupExtensions.CompositeSyntax composite, string partName, string binding,
+            string processors)
         {
             var keyCode = KeyNames.NameToKey(binding);
 

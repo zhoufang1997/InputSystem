@@ -458,6 +458,8 @@ namespace UnityEngine
             public abstract bool IsAnyKeyDown();
 
             public abstract string GetInputString();
+
+            public abstract bool IsMousePresent();
             public abstract Vector3 GetMousePosition();
             public abstract Vector2 GetMouseScrollDelta();
             public abstract bool GetMouseButton(int button);
@@ -593,14 +595,20 @@ namespace UnityEngine
             get { return provider?.GetMouseScrollDelta() ?? Vector2.zero; }
         }
         public static IMECompositionMode imeCompositionMode { get; set; }
-        public static string compositionString { get; }
+        public static string compositionString
+        {
+            get { return ""; }
+        }
         public static bool imeIsSelected { get; }
         public static Vector2 compositionCursorPos { get; set; }
 
         [Obsolete("eatKeyPressOnTextFieldFocus property is deprecated, and only provided to support legacy behavior.")]
         public static bool eatKeyPressOnTextFieldFocus { get; set; }
 
-        public static bool mousePresent { get; }
+        public static bool mousePresent
+        {
+            get { return provider?.IsMousePresent() ?? false; }
+        }
         public static int touchCount { get; }
         public static bool touchPressureSupported { get; }
         public static bool stylusTouchSupported { get; }

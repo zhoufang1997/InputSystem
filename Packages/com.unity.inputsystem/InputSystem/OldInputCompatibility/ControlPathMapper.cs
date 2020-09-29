@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 namespace UnityEngine.InputSystem.OldInputCompatibility
 {
@@ -150,6 +151,20 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 ////REVIEW: With these two, is it this way around or the other?
                 case KeyCode.Mouse3: return $"<Mouse>{usage}/forwardButton";
                 case KeyCode.Mouse4: return $"<Mouse>{usage}/backButton";
+            }
+
+            return null;
+        }
+
+        public static KeyCode? GetMouseKeyCodeForButtonNumber(int buttonNumber)
+        {
+            switch (buttonNumber)
+            {
+                case 0: return KeyCode.Mouse0;
+                case 1: return KeyCode.Mouse1;
+                case 2: return KeyCode.Mouse2;
+                case 3: return KeyCode.Mouse3;
+                case 4: return KeyCode.Mouse4;
             }
 
             return null;
