@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
 
@@ -5,16 +6,6 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 {
     internal class ControlPathMapper
     {
-        public static string GetKeyboardControlActionNameForKeyCode(string keyCodeName)
-        {
-            return $"KeyboardKey{keyCodeName}";
-        }
-
-        public static string GetKeyboardControlActionNameForKeyCode(KeyCode keyCode)
-        {
-            return GetKeyboardControlActionNameForKeyCode(keyCode.ToString());
-        }
-
         public static string GetKeyboardControlPathForKeyCode(KeyCode keyCode, string usage)
         {
             switch (keyCode)
@@ -247,5 +238,30 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         // {
         //     throw new NotImplementedException();
         // }
+
+        public static string[] GetAllControlPathsForKeyCode(KeyCode keyCode, string usage)
+        {
+            // If the binding is associated with a particular joystick, reflect that
+            // through a usage tag on the binding.
+            var joyNum = GetJoystickNumber(keyCode);
+            if (joyNum >= 1)
+                // TODO some more obvious way to indicate that usage is overriden? an exception if external usage was provided?
+                usage = GamepadsAndJoysticksMonitor.JoyNumToUsage(joyNum);
+
+            keyCode = MapJoystickButtonToJoystick0(keyCode);
+
+            var result = new List<string>();
+            result.Add(GetGamepadControlPathForKeyCode(keyCode, usage));
+            result.Add(GetJoystickControlPathForKeyCode(keyCode, usage));
+            result.Add(GetKeyboardControlPathForKeyCode(keyCode, usage));
+            result.Add(GetMouseControlPathForKeyCode(keyCode, usage));
+            result.RemoveAll(string.IsNullOrEmpty);
+            return result.ToArray();
+        }
+
+        public static string[] GetAllControlPathsForKeyName(string keyName, string usage)
+        {
+            return GetAllControlPathsForKeyCode(KeyNames.NameToKey(keyName), usage);
+        }
     }
 }

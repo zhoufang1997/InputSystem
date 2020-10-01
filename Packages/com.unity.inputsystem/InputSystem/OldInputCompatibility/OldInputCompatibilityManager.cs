@@ -165,20 +165,19 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             s_KeyActions = new ActionStateListener[(int) KeyCode.Joystick8Button19 + 1];
 
             // emulate any keyboard key
-            var anyKeyAction = s_Actions.AddAction(ControlPathMapper.GetKeyboardControlActionNameForKeyCode("__AnyKey"),
-                InputActionType.Button);
+            var anyKeyAction =
+                s_Actions.AddAction(ActionNameMapper.GetKeyboardAnyKeyActionName(), InputActionType.Button);
             anyKeyAction.AddBinding("<Keyboard>/anyKey");
             var anyKeyActionListener = new ActionStateListener(anyKeyAction);
 
             // emulate all keys
             foreach (var keyCode in (KeyCode[]) Enum.GetValues(typeof(KeyCode)))
             {
-                var actionName = ControlPathMapper.GetKeyboardControlActionNameForKeyCode(keyCode);
+                var actionName = ActionNameMapper.GetKeyboardActionNameForKeyCode(keyCode);
                 var action = s_Actions.FindAction(actionName);
+                var controlPaths = ControlPathMapper.GetAllControlPathsForKeyCode(keyCode, null);
 
-                var keyboardControlPath = ControlPathMapper.GetKeyboardControlPathForKeyCode(keyCode, null);
-                var mouseControlPath = ControlPathMapper.GetMouseControlPathForKeyCode(keyCode, null);
-                if ((keyboardControlPath == null) && (mouseControlPath == null))
+                if (controlPaths.Length == 0)
                     continue;
 
                 if (action == null)
@@ -188,27 +187,28 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                         s_ActionStateListeners[actionName] = new ActionStateListener(action);
                 }
 
-                if (keyboardControlPath != null)
-                    action.AddBinding(keyboardControlPath);
-                if (mouseControlPath != null)
-                    action.AddBinding(mouseControlPath);
+                foreach (var controlPath in controlPaths)
+                    action.AddBinding(controlPath);
             }
 
             // mouse position is emulated via accessing Mouse.current directly
             // TODO reevaluate if mouse position should also use actions
 
-            /*
-            foreach(var axis in InputManagerConfiguration.GetCurrent())
+            foreach (var axis in InputManagerConfiguration.GetCurrent())
             {
+                var actionName = ActionNameMapper.GetAxisActionNameFromAxisName(axis.name);
+
                 // Add action, if we haven't already.
                 ////REVIEW: Unlike the old input manager, FindAction is case-insensitive. Might be undesirable here.
-                var action = s_Actions.FindAction(axis.name);
+                var action = s_Actions.FindAction(actionName);
                 if (action == null)
                 {
                     // All InputManager axis are float values. We don't really know from the configuration
                     // what's considered a button and was is considered just an axis.
-                    action = s_Actions.AddAction(axis.name, InputActionType.Value);
+                    action = s_Actions.AddAction(actionName, InputActionType.Value);
                     action.expectedControlType = "Axis";
+
+                    s_ActionStateListeners[actionName] = new ActionStateListener(action);
                 }
 
                 switch (axis.type)
@@ -225,7 +225,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                         ////TODO
                         break;
                 }
-            }*/
+            }
 
             Input.provider = new ApiShimDataProvider(
                 s_Actions,
@@ -243,96 +243,39 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             var processors = StringHelpers.Join(new[]
             {
                 axis.invert ? "invert" : null,
-                !Mathf.Approximately(axis.sensitivity, 0) ? $"scale(factor={axis.sensitivity}" : null,
+                !Mathf.Approximately(axis.sensitivity, 0) ? $"scale(factor={axis.sensitivity})" : null,
                 ////TODO: snap
                 ////TODO: gravity
             }, ",");
 
-            /*
-            if (!string.IsNullOrEmpty(axis.positiveButton) && !string.IsNullOrEmpty(axis.negativeButton))
-                AddAxisComposite(action, axis.positiveButton, axis.negativeButton, processors);
-            else if (string.IsNullOrEmpty(axis.positiveButton))
-                action.AddInputManagerBinding(axis.positiveButton, processors);
-            if (!string.IsNullOrEmpty(axis.altPositiveButton) && !string.IsNullOrEmpty(axis.altNegativeButton))
-                AddAxisComposite(action, axis.altPositiveButton, axis.altNegativeButton, processors);
-            else if (string.IsNullOrEmpty(axis.altPositiveButton))
-                action.AddInputManagerBinding(axis.altPositiveButton, processors);
-                */
+            var positiveControlPaths =
+                ControlPathMapper.GetAllControlPathsForKeyName(axis.positiveButton, null);
+            var altPositiveControlPaths =
+                ControlPathMapper.GetAllControlPathsForKeyName(axis.altPositiveButton, null);
+            var negativeControlPaths =
+                ControlPathMapper.GetAllControlPathsForKeyName(axis.negativeButton, null);
+            var altNegativeControlPaths =
+                ControlPathMapper.GetAllControlPathsForKeyName(axis.altNegativeButton, null);
+
+            AddButtonBindingsWithDirection(action, "Positive",
+                positiveControlPaths.Concat(altPositiveControlPaths).ToArray(), processors);
+            AddButtonBindingsWithDirection(action, "Negative",
+                negativeControlPaths.Concat(altNegativeControlPaths).ToArray(), processors);
         }
 
-        private static void AddAxisComposite(InputAction action, string positive, string negative, string processors)
-        {
-            /*
-            action.AddCompositeBinding("1DAxis")
-                .WithInputManagerBinding("Positive", positive, processors)
-                .WithInputManagerBinding("Negative", negative, processors);
-                */
-        }
-
-        private static InputActionSetupExtensions.CompositeSyntax WithInputManagerBinding(
-            this InputActionSetupExtensions.CompositeSyntax composite, string partName, string binding,
+        private static void AddButtonBindingsWithDirection(InputAction action, string direction, string[] controlPaths,
             string processors)
         {
-            var keyCode = KeyNames.NameToKey(binding);
+            if (controlPaths.Length == 0)
+                return;
 
-            // If the binding is associated with a particular joystick, reflect that
-            // through a usage tag on the binding.
-            var joyNum = ControlPathMapper.GetJoystickNumber(keyCode);
-            var usage = default(string);
-            if (joyNum >= 1)
-                usage = GamepadsAndJoysticksMonitor.JoyNumToUsage(joyNum);
-
-            keyCode = ControlPathMapper.MapJoystickButtonToJoystick0(keyCode);
-
-            // var gamepad = ControlPathMapper.GetGamepadControlPathForKeyCode(keyCode, usage);
-            // if (!string.IsNullOrEmpty(gamepad))
-            //     composite.With(partName, gamepad, processors: processors);
-            //
-            // var joystick = ControlPathMapper.GetJoystickControlPathForKeyCode(keyCode, usage);
-            // if (!string.IsNullOrEmpty(joystick))
-            //     composite.With(partName, joystick, processors: processors);
-            //
-            // var keyboard = ControlPathMapper.GetKeyboardControlPathForKeyCode(keyCode, usage);
-            // if (!string.IsNullOrEmpty(keyboard))
-            //     composite.With(partName, keyboard, processors: processors);
-            //
-            // var mouse = ControlPathMapper.GetMouseControlPathForKeyCode(keyCode, usage);
-            // if (!string.IsNullOrEmpty(mouse))
-            //     composite.With(partName, mouse, processors: processors);
-
-            return composite;
+            var binding = action.AddCompositeBinding("Axis");
+            foreach (var controlPath in controlPaths)
+            {
+                Debug.Log($"{action.name} -> {controlPath}");
+                binding = binding.With(direction, controlPath, processors: processors);
+            }
         }
-
-        private static void AddInputManagerBinding(this InputAction action, string binding, string processors)
-        {
-            var keyCode = KeyNames.NameToKey(binding);
-
-            // If the binding is associated with a particular joystick, reflect that
-            // through a usage tag on the binding.
-            var joyNum = ControlPathMapper.GetJoystickNumber(keyCode);
-            var usage = default(string);
-            if (joyNum >= 1)
-                usage = GamepadsAndJoysticksMonitor.JoyNumToUsage(joyNum);
-
-            keyCode = ControlPathMapper.MapJoystickButtonToJoystick0(keyCode);
-
-            var gamepad = ControlPathMapper.GetGamepadControlPathForKeyCode(keyCode, usage);
-            if (!string.IsNullOrEmpty(gamepad))
-                action.AddBinding(gamepad, processors: processors);
-
-            var joystick = ControlPathMapper.GetJoystickControlPathForKeyCode(keyCode, usage);
-            if (!string.IsNullOrEmpty(joystick))
-                action.AddBinding(joystick, processors: processors);
-
-            var keyboard = ControlPathMapper.GetKeyboardControlPathForKeyCode(keyCode, usage);
-            if (!string.IsNullOrEmpty(keyboard))
-                action.AddBinding(keyboard, processors: processors);
-
-            var mouse = ControlPathMapper.GetMouseControlPathForKeyCode(keyCode, usage);
-            if (!string.IsNullOrEmpty(mouse))
-                action.AddBinding(mouse, processors: processors);
-        }
-
 
         public static void Enable()
         {

@@ -1468,7 +1468,7 @@ namespace UnityEngine.InputSystem
             /// <param name="binding">Control path to binding to. See <see cref="InputBinding.path"/>.</param>
             /// <param name="groups">Binding groups to assign to the part binding. See <see cref="InputBinding.groups"/>.</param>
             /// <returns>The same composite syntax for further configuration.</returns>
-            public CompositeSyntax With(string name, string binding, string groups = null)
+            public CompositeSyntax With(string name, string binding, string processors = null, string groups = null)
             {
                 ////TODO: check whether non-composite bindings have been added in-between
 
@@ -1482,6 +1482,7 @@ namespace UnityEngine.InputSystem
 
                 m_ActionMap.m_Bindings[bindingIndex].name = name;
                 m_ActionMap.m_Bindings[bindingIndex].isPartOfComposite = true;
+                m_ActionMap.m_Bindings[bindingIndex].processors = processors; // TODO move it to a better place
 
                 return this;
             }

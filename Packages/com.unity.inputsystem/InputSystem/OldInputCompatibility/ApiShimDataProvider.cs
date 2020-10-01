@@ -26,23 +26,26 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 
         public override float GetAxis(string axisName)
         {
-            // TODO maybe axisName == actionName is not the best
-            return map.FindAction(axisName)?.ReadValue<float>() ?? 0.0f;
+            var actionName = ActionNameMapper.GetAxisActionNameFromAxisName(axisName);
+            return stateListeners.TryGetValue(actionName, out var listener) ? listener.action.ReadValue<float>() : 0.0f;
         }
 
         public override bool GetButton(string axisName)
         {
-            return stateListeners.TryGetValue(axisName, out var listener) && listener.isPressed;
+            var actionName = ActionNameMapper.GetAxisActionNameFromAxisName(axisName);
+            return stateListeners.TryGetValue(actionName, out var listener) && listener.isPressed;
         }
 
         public override bool GetButtonDown(string axisName)
         {
-            return stateListeners.TryGetValue(axisName, out var listener) && listener.action.triggered;
+            var actionName = ActionNameMapper.GetAxisActionNameFromAxisName(axisName);
+            return stateListeners.TryGetValue(actionName, out var listener) && listener.action.triggered;
         }
 
         public override bool GetButtonUp(string axisName)
         {
-            return stateListeners.TryGetValue(axisName, out var listener) && listener.cancelled;
+            var actionName = ActionNameMapper.GetAxisActionNameFromAxisName(axisName);
+            return stateListeners.TryGetValue(actionName, out var listener) && listener.cancelled;
         }
 
         public override bool GetKey(KeyCode key)
