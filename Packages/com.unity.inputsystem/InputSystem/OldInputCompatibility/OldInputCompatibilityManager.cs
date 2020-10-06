@@ -164,72 +164,71 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             s_ActionStateListeners = new Dictionary<string, ActionStateListener>();
             s_KeyActions = new ActionStateListener[(int) KeyCode.Joystick8Button19 + 1];
 
-            // emulate any keyboard key
-            var anyKeyAction =
-                s_Actions.AddAction(ActionNameMapper.GetKeyboardAnyKeyActionName(), InputActionType.Button);
-            anyKeyAction.AddBinding("<Keyboard>/anyKey");
-            var anyKeyActionListener = new ActionStateListener(anyKeyAction);
-
-            // emulate all keys
-            foreach (var keyCode in (KeyCode[]) Enum.GetValues(typeof(KeyCode)))
-            {
-                var actionName = ActionNameMapper.GetKeyboardActionNameForKeyCode(keyCode);
-                var action = s_Actions.FindAction(actionName);
-                var controlPaths = ControlPathMapper.GetAllControlPathsForKeyCode(keyCode, null);
-
-                if (controlPaths.Length == 0)
-                    continue;
-
-                if (action == null)
-                {
-                    action = s_Actions.AddAction(actionName, InputActionType.Button);
-                    s_KeyActions[(int) keyCode] =
-                        s_ActionStateListeners[actionName] = new ActionStateListener(action);
-                }
-
-                foreach (var controlPath in controlPaths)
-                    action.AddBinding(controlPath);
-            }
+            // // emulate any keyboard key
+            // var anyKeyAction =
+            //     s_Actions.AddAction(ActionNameMapper.GetKeyboardAnyKeyActionName(), InputActionType.Button);
+            // anyKeyAction.AddBinding("<Keyboard>/anyKey");
+            // var anyKeyActionListener = new ActionStateListener(anyKeyAction);
+            //
+            // // emulate all keys
+            // foreach (var keyCode in (KeyCode[]) Enum.GetValues(typeof(KeyCode)))
+            // {
+            //     var actionName = ActionNameMapper.GetKeyboardActionNameForKeyCode(keyCode);
+            //     var action = s_Actions.FindAction(actionName);
+            //     var controlPaths = ControlPathMapper.GetAllControlPathsForKeyCode(keyCode, null);
+            //
+            //     if (controlPaths.Length == 0)
+            //         continue;
+            //
+            //     if (action == null)
+            //     {
+            //         action = s_Actions.AddAction(actionName, InputActionType.Button);
+            //         s_KeyActions[(int) keyCode] =
+            //             s_ActionStateListeners[actionName] = new ActionStateListener(action);
+            //     }
+            //
+            //     foreach (var controlPath in controlPaths)
+            //         action.AddBinding(controlPath);
+            // }
 
             // mouse position is emulated via accessing Mouse.current directly
             // TODO reevaluate if mouse position should also use actions
 
-            foreach (var axis in InputManagerConfiguration.GetCurrent())
-            {
-                var actionName = ActionNameMapper.GetAxisActionNameFromAxisName(axis.name);
-
-                // Add action, if we haven't already.
-                ////REVIEW: Unlike the old input manager, FindAction is case-insensitive. Might be undesirable here.
-                var action = s_Actions.FindAction(actionName);
-                if (action == null)
-                {
-                    // All InputManager axis are float values. We don't really know from the configuration
-                    // what's considered a button and was is considered just an axis.
-                    action = s_Actions.AddAction(actionName, InputActionType.Value);
-                    action.expectedControlType = "Axis";
-
-                    s_ActionStateListeners[actionName] = new ActionStateListener(action);
-                }
-
-                switch (axis.type)
-                {
-                    case InputManagerConfiguration.AxisType.Button:
-                        AddButtonBindings(action, axis);
-                        break;
-
-                    case InputManagerConfiguration.AxisType.Mouse:
-                        ////TODO
-                        break;
-
-                    case InputManagerConfiguration.AxisType.Joystick:
-                        ////TODO
-                        break;
-                }
-            }
+            // foreach (var axis in InputManagerConfiguration.GetCurrent())
+            // {
+            //     var actionName = ActionNameMapper.GetAxisActionNameFromAxisName(axis.name);
+            //
+            //     // Add action, if we haven't already.
+            //     ////REVIEW: Unlike the old input manager, FindAction is case-insensitive. Might be undesirable here.
+            //     var action = s_Actions.FindAction(actionName);
+            //     if (action == null)
+            //     {
+            //         // All InputManager axis are float values. We don't really know from the configuration
+            //         // what's considered a button and was is considered just an axis.
+            //         action = s_Actions.AddAction(actionName, InputActionType.Value);
+            //         action.expectedControlType = "Axis";
+            //
+            //         s_ActionStateListeners[actionName] = new ActionStateListener(action);
+            //     }
+            //
+            //     switch (axis.type)
+            //     {
+            //         case InputManagerConfiguration.AxisType.Button:
+            //             AddButtonBindings(action, axis);
+            //             break;
+            //
+            //         case InputManagerConfiguration.AxisType.Mouse:
+            //             ////TODO
+            //             break;
+            //
+            //         case InputManagerConfiguration.AxisType.Joystick:
+            //             ////TODO
+            //             break;
+            //     }
+            // }
 
             Input.provider = new ApiShimDataProvider(
                 s_Actions,
-                anyKeyActionListener,
                 s_ActionStateListeners,
                 s_KeyActions
             );

@@ -132,34 +132,34 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             return null;
         }
 
-        public static string GetMouseControlPathForKeyCode(KeyCode keyCode, string usage)
-        {
-            switch (keyCode)
-            {
-                case KeyCode.Mouse0: return $"<Mouse>{usage}/leftButton";
-                case KeyCode.Mouse1: return $"<Mouse>{usage}/rightButton";
-                case KeyCode.Mouse2: return $"<Mouse>{usage}/middleButton";
-                ////REVIEW: With these two, is it this way around or the other?
-                case KeyCode.Mouse3: return $"<Mouse>{usage}/forwardButton";
-                case KeyCode.Mouse4: return $"<Mouse>{usage}/backButton";
-            }
-
-            return null;
-        }
-
-        public static KeyCode? GetMouseKeyCodeForButtonNumber(int buttonNumber)
-        {
-            switch (buttonNumber)
-            {
-                case 0: return KeyCode.Mouse0;
-                case 1: return KeyCode.Mouse1;
-                case 2: return KeyCode.Mouse2;
-                case 3: return KeyCode.Mouse3;
-                case 4: return KeyCode.Mouse4;
-            }
-
-            return null;
-        }
+        // public static string GetMouseControlPathForKeyCode(KeyCode keyCode, string usage)
+        // {
+        //     switch (keyCode)
+        //     {
+        //         case KeyCode.Mouse0: return $"<Mouse>{usage}/leftButton";
+        //         case KeyCode.Mouse1: return $"<Mouse>{usage}/rightButton";
+        //         case KeyCode.Mouse2: return $"<Mouse>{usage}/middleButton";
+        //         ////REVIEW: With these two, is it this way around or the other?
+        //         case KeyCode.Mouse3: return $"<Mouse>{usage}/forwardButton";
+        //         case KeyCode.Mouse4: return $"<Mouse>{usage}/backButton";
+        //     }
+        //
+        //     return null;
+        // }
+        //
+        // public static KeyCode? GetMouseKeyCodeForButtonNumber(int buttonNumber)
+        // {
+        //     switch (buttonNumber)
+        //     {
+        //         case 0: return KeyCode.Mouse0;
+        //         case 1: return KeyCode.Mouse1;
+        //         case 2: return KeyCode.Mouse2;
+        //         case 3: return KeyCode.Mouse3;
+        //         case 4: return KeyCode.Mouse4;
+        //     }
+        //
+        //     return null;
+        // }
 
         public static string GetJoystickControlPathForKeyCode(KeyCode button, string usage)
         {
@@ -254,7 +254,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             result.Add(GetGamepadControlPathForKeyCode(keyCode, usage));
             result.Add(GetJoystickControlPathForKeyCode(keyCode, usage));
             result.Add(GetKeyboardControlPathForKeyCode(keyCode, usage));
-            result.Add(GetMouseControlPathForKeyCode(keyCode, usage));
+            //result.Add(GetMouseControlPathForKeyCode(keyCode, usage));
             result.RemoveAll(string.IsNullOrEmpty);
             return result.ToArray();
         }

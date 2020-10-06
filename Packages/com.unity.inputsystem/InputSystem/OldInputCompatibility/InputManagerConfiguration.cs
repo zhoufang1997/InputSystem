@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine.InputSystem.Editor;
+#endif
 
 namespace UnityEngine.InputSystem.OldInputCompatibility
 {
@@ -40,6 +42,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 
         public static Axis[] GetCurrent()
         {
+            #if UNITY_EDITOR
             var manager = (from obj in Resources.FindObjectsOfTypeAll<UnityEngine.Object>()
                 where obj.GetType().FullName == "UnityEditor.InputManager"
                 select new SerializedObject(obj)).FirstOrDefault();
@@ -61,6 +64,9 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             }
 
             return result;
+            #else
+            return new Axis[0];
+            #endif
         }
     };
 }
