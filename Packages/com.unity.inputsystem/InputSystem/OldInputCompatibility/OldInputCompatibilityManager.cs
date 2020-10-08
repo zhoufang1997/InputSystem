@@ -158,8 +158,6 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 
         public static void BootstrapInputConfiguration()
         {
-            GamepadsAndJoysticksMonitor.Enable();
-
             s_Actions = new InputActionMap("InputManagerLegacy");
             s_ActionStateListeners = new Dictionary<string, ActionStateListener>();
             s_KeyActions = new ActionStateListener[(int) KeyCode.Joystick8Button19 + 1];
@@ -227,11 +225,15 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             //     }
             // }
 
-            Input.provider = new ApiShimDataProvider(
+            var provider = new ApiShimDataProvider(
                 s_Actions,
                 s_ActionStateListeners,
                 s_KeyActions
             );
+
+            DeviceMonitor.Enable(provider.OnTextChange);
+
+            Input.provider = provider;
         }
 
         private static void AddButtonBindings(InputAction action, InputManagerConfiguration.Axis axis)

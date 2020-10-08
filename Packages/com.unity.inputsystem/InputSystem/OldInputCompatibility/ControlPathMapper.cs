@@ -246,7 +246,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             var joyNum = GetJoystickNumber(keyCode);
             if (joyNum >= 1)
                 // TODO some more obvious way to indicate that usage is overriden? an exception if external usage was provided?
-                usage = GamepadsAndJoysticksMonitor.JoyNumToUsage(joyNum);
+                usage = DeviceMonitor.JoyNumToUsage(joyNum);
 
             keyCode = MapJoystickButtonToJoystick0(keyCode);
 

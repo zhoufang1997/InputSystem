@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace UnityEngine.InputSystem.OldInputCompatibility
 {
@@ -12,6 +13,17 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             PressedThisFrame,
             ReleasedThisFrame
         };
+
+        public void OnTextChange(char x)
+        {
+            if (inputStringStep != InputUpdate.s_UpdateStepCount)
+            {
+                inputStringData = x.ToString();
+                inputStringStep = InputUpdate.s_UpdateStepCount;
+            }
+            else
+                inputStringData += x.ToString();
+        }
 
         public ApiShimDataProvider(
             InputActionMap setMap,
@@ -27,6 +39,9 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         //private InputActionMap map;
         //private IDictionary<string, ActionStateListener> stateListeners; // TODO remove this later on
         //private ActionStateListener[] keyActions; // array of keycodes
+
+        private string inputStringData = "";
+        private uint inputStringStep = 0;
 
         private bool GetStateOfKeyCode(KeyCode keyCode, StateRequest stateRequest)
         {
@@ -147,12 +162,12 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
                 case KeyCode.RightShift: return Key.RightShift;
                 case KeyCode.LeftAlt: return Key.LeftAlt;
                 case KeyCode.RightAlt: return Key.RightAlt;
-                // TODO case KeyCode.AltGr: return Key.AltGr = RightAlt;
                 case KeyCode.LeftControl: return Key.LeftCtrl;
                 case KeyCode.RightControl: return Key.RightCtrl;
                 case KeyCode.LeftWindows: return Key.LeftMeta;
                 case KeyCode.RightWindows: return Key.RightMeta;
-                // TODO case KeyCode.: return Key.ContextMenu;
+                case KeyCode.AltGr: return Key.AltGr;
+                case KeyCode.Menu: return Key.ContextMenu;
                 case KeyCode.Escape: return Key.Escape;
                 case KeyCode.LeftArrow: return Key.LeftArrow;
                 case KeyCode.RightArrow: return Key.RightArrow;
@@ -227,23 +242,23 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             }
         }
 
-        private static bool ResolveState(ActionStateListener stateListener, StateRequest request)
-        {
-            if (stateListener == null)
-                return false;
-
-            switch (request)
-            {
-                case StateRequest.Pressed:
-                    return stateListener.isPressed;
-                case StateRequest.PressedThisFrame:
-                    return stateListener.action.triggered;
-                case StateRequest.ReleasedThisFrame:
-                    return stateListener.cancelled;
-                default:
-                    return false;
-            }
-        }
+        // private static bool ResolveState(ActionStateListener stateListener, StateRequest request)
+        // {
+        //     if (stateListener == null)
+        //         return false;
+        //
+        //     switch (request)
+        //     {
+        //         case StateRequest.Pressed:
+        //             return stateListener.isPressed;
+        //         case StateRequest.PressedThisFrame:
+        //             return stateListener.action.triggered;
+        //         case StateRequest.ReleasedThisFrame:
+        //             return stateListener.cancelled;
+        //         default:
+        //             return false;
+        //     }
+        // }
 
         public override float GetAxis(string axisName)
         {
@@ -311,7 +326,9 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
 
         public override string GetInputString()
         {
-            return ""; // TODO
+            if (inputStringStep == InputUpdate.s_UpdateStepCount)
+                return inputStringData;
+            return "";
         }
 
         public override bool IsMousePresent()

@@ -572,28 +572,15 @@ namespace UnityEngine
         // private extern static void SimulateTouchInternal(int id, Vector2 position, TouchPhase action, long timestamp);
 
         public static bool simulateMouseWithTouches { get; set; }
-        public static bool anyKey
-        {
-            get { return provider?.IsAnyKeyPressed() ?? false; }
-        }
-        public static bool anyKeyDown
-        {
-            get { return provider?.IsAnyKeyDown() ?? false; }
-        }
-        public static string inputString
-        {
-            get { return provider?.GetInputString() ?? ""; }
-        }
+        public static bool anyKey => provider?.IsAnyKeyPressed() ?? false;
 
-        public static Vector3 mousePosition
-        {
-            get { return provider?.GetMousePosition() ?? Vector3.zero; }
-        }
+        public static bool anyKeyDown => provider?.IsAnyKeyDown() ?? false;
 
-        public static Vector2 mouseScrollDelta
-        {
-            get { return provider?.GetMouseScrollDelta() ?? Vector2.zero; }
-        }
+        public static string inputString => provider?.GetInputString() ?? "";
+
+        public static Vector3 mousePosition => provider?.GetMousePosition() ?? Vector3.zero;
+
+        public static Vector2 mouseScrollDelta => provider?.GetMouseScrollDelta() ?? Vector2.zero;
         public static IMECompositionMode imeCompositionMode { get; set; }
         public static string compositionString
         {
