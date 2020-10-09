@@ -31,6 +31,7 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
             ActionStateListener[] setKeyActions
         )
         {
+            EnhancedTouch.EnhancedTouchSupport.Enable();
             // map = setMap;
             // stateListeners = setStateListeners;
             // keyActions = setKeyActions;
@@ -367,6 +368,96 @@ namespace UnityEngine.InputSystem.OldInputCompatibility
         {
             var keyCode = ConvertMouseButtonToKeyCode(buttonNumber);
             return keyCode != null && GetStateOfKeyCode(keyCode.Value, StateRequest.ReleasedThisFrame);
+        }
+
+        public override Touch GetTouch(int index)
+        {
+            if (index >= EnhancedTouch.Touch.activeTouches.Count)
+                return new Touch();
+
+            var t = new Touch();
+            var f = EnhancedTouch.Touch.activeTouches[index];
+            t.fingerId = f.touchId; // ???
+            t.position = f.screenPosition;
+            t.rawPosition = f.screenPosition; // ???
+            t.deltaPosition = f.delta;
+            t.deltaTime = (float)f.time; // ???
+            t.tapCount = f.tapCount;
+            switch (f.phase)
+            {
+                case TouchPhase.None:
+                case TouchPhase.Began:
+                    t.phase = UnityEngine.TouchPhase.Began;
+                    break;
+                case TouchPhase.Moved:
+                    t.phase = UnityEngine.TouchPhase.Moved;
+                    break;
+                case TouchPhase.Ended:
+                    t.phase = UnityEngine.TouchPhase.Ended;
+                    break;
+                case TouchPhase.Canceled:
+                    t.phase = UnityEngine.TouchPhase.Canceled;
+                    break;
+                case TouchPhase.Stationary:
+                    t.phase = UnityEngine.TouchPhase.Stationary;
+                    break;
+            }
+
+            t.type = TouchType.Direct; // ???
+            t.pressure = f.pressure;
+            t.maximumPossiblePressure = 1.0f; // seems to be normalized?
+            t.radius = f.radius.magnitude; // ???
+
+            return t;
+
+            /*
+             *
+             *        private int m_FingerId;
+        private Vector2 m_Position;
+        private Vector2 m_RawPosition;
+        private Vector2 m_PositionDelta;
+        private float m_TimeDelta;
+        private int m_TapCount;
+        private TouchPhase m_Phase;
+        private TouchType m_Type;
+        private float m_Pressure;
+        private float m_maximumPossiblePressure;
+        private float m_Radius;
+        private float m_RadiusVariance;
+        private float m_AltitudeAngle;
+        private float m_AzimuthAngle;
+
+             *
+             */
+        }
+
+        public override int GetTouchCount()
+        {
+            return EnhancedTouch.Touch.activeTouches.Count;
+        }
+
+        public override bool GetTouchPressureSupported()
+        {
+            return true; // ???
+        }
+
+        public override bool GetStylusTouchSupported()
+        {
+            return false;
+        }
+
+        public override bool GetTouchSupported()
+        {
+            return true; // ???
+        }
+
+        public override void SetMultiTouchEnabled(bool enable)
+        {
+        }
+
+        public override bool GetMultiTouchEnabled()
+        {
+            return true; // ??
         }
     };
 }

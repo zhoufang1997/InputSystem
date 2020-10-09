@@ -465,6 +465,14 @@ namespace UnityEngine
             public abstract bool GetMouseButton(int button);
             public abstract bool GetMouseButtonDown(int button);
             public abstract bool GetMouseButtonUp(int button);
+
+            public abstract Touch GetTouch(int index);
+            public abstract int GetTouchCount();
+            public abstract bool GetTouchPressureSupported();
+            public abstract bool GetStylusTouchSupported();
+            public abstract bool GetTouchSupported();
+            public abstract void SetMultiTouchEnabled(bool enable);
+            public abstract bool GetMultiTouchEnabled();
         };
 
         public static DataProvider provider;
@@ -522,7 +530,7 @@ namespace UnityEngine
 
         public static Touch GetTouch(int index)
         {
-            return new Touch();
+            return provider?.GetTouch(index) ?? new Touch();
         }
 
         public static AccelerationEvent GetAccelerationEvent(int index)
@@ -596,11 +604,15 @@ namespace UnityEngine
         {
             get { return provider?.IsMousePresent() ?? false; }
         }
-        public static int touchCount { get; }
-        public static bool touchPressureSupported { get; }
-        public static bool stylusTouchSupported { get; }
-        public static bool touchSupported { get; }
-        public static bool multiTouchEnabled { get; set; }
+        public static int touchCount => provider?.GetTouchCount() ?? 0;
+        public static bool touchPressureSupported => provider?.GetTouchPressureSupported() ?? false;
+        public static bool stylusTouchSupported => provider?.GetStylusTouchSupported() ?? false;
+        public static bool touchSupported => provider?.GetTouchSupported() ?? false;
+        public static bool multiTouchEnabled
+        {
+            get => provider?.GetMultiTouchEnabled() ?? false;
+            set => provider?.SetMultiTouchEnabled(value);
+        }
 
         [Obsolete("isGyroAvailable property is deprecated. Please use SystemInfo.supportsGyroscope instead.")]
         public static bool isGyroAvailable { get; }
